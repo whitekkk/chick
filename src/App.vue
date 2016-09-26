@@ -1,12 +1,19 @@
 <template>
   <div @mousemove="mousePosition()">
-    <div id="app" @mouseover="move" @mouseout="outOfArea">
+    <div id="app"  @mouseover="move" @mouseout="outOfArea">
+      <div class="avatar" :style="{'top': avatar.y-25 + 'px', 'left': avatar.x-25 + 'px'}" v-for="avatar in avatars">
+        <a style="margin: 10px;">
+          {{avatar.name}}
+        </a>
+        <div>
+          <img src="../img/king.png" width="65" height="65" style="position: absolute; z-index: 999; top:5px; left:-1px;"/>
+          <img src="../img/1.png" width="60" height="60" style="position: absolute; z-index: 99;"/>
+          <img src="../img/LEG1.png" width="10" height="10" style="position: absolute; z-index: 99; top:75px; left:20px;"/>
+          <img src="../img/LEG1.png" width="10" height="10" style="position: absolute; z-index: 99; top:75px; left:30px;"/>
+        </div>
+      </div>
     </div>
   </div>
-
-    <div class="avatar" :style="{'background': avatar.color, 'top': avatar.y + 'px', 'left': avatar.x + 'px'}" v-for="avatar in avatars">
-    </div>
-
 </template>
 
 <script>
@@ -48,17 +55,21 @@ export default {
     })
   },
   data () {
-    let r = Math.floor(Math.random() * 255)
-    let g = Math.floor(Math.random() * 255)
-    let b = Math.floor(Math.random() * 255)
+    let chickColor = Math.floor(Math.random() * 3)
+    // let r = Math.floor(Math.random() * 255)
+    // let g = Math.floor(Math.random() * 255)
+    // let b = Math.floor(Math.random() * 255)
 
     let x = Math.floor(Math.random() * 500)
-    let y = 0
+    let y = Math.floor(Math.random() * 500)
 
     return {
+      mouseX: 0,
+      mouseY: 0,
       avatars: [],
       myAvatar: {
-        color: `rgb(${r}, ${g}, ${b})`,
+        name: 'Ponzi',
+        color: `${chickColor}`, // color: `rgb(${r}, ${g}, ${b})`,
         x,
         y,
         active: false
@@ -77,13 +88,32 @@ export default {
       this.myAvatar.id = result.key
     },
     move () {
-      console.log('move')
       let vm = this
+      var xOrigin = vm.myAvatar.x
+      var yOrigin = vm.myAvatar.y
       vm.myAvatar.active = setInterval(function () {
+        var x1 = vm.mouseX
+        var y1 = vm.mouseY
+        var dx = Math.abs(x1 - xOrigin)
+        var dy = Math.abs(y1 - yOrigin)
+        var checkX = (xOrigin < x1) ? 1 : -1
+        var checkY = (yOrigin < y1) ? 1 : -1
+        var err = dx - dy
         if (vm.myAvatar.y < 500 && vm.myAvatar.active) {
           firebase.database().ref('avatars/' + vm.myAvatar.id).update({
-            y: vm.myAvatar.y + 1
+            y: yOrigin,
+            x: xOrigin
           })
+        }
+        if ((xOrigin === x1) && (yOrigin === y1)) clearInterval(vm.myAvatar.active)
+        var e2 = 2 * err
+        if (e2 > -dy) {
+          err -= dy
+          xOrigin += checkX
+        }
+        if (e2 < dx) {
+          err += dx
+          yOrigin += checkY
         }
       }, 10)
     },
@@ -96,8 +126,10 @@ export default {
       })
     },
     mousePosition () {
+      let vm = this
       let position = window.event
-      console.log('Position X : ' + position.clientX + ' Position Y : ' + position.clientY)
+      vm.mouseX = position.clientX
+      vm.mouseY = position.clientY
     }
   }
 }
@@ -116,8 +148,7 @@ export default {
 }
 .avatar {
   position: absolute;
-  width: 10px;
-  height: 10px;
-  background: #F00;
+  width: 50px;
+  height: 50px;
 }
 </style>
