@@ -194,16 +194,21 @@ export default {
       var checkX = 1
       var checkY = 1
       var err = 0
+      let i = 0
       // var checkArea = (((xOrigin < 0 || yOrigin < 0) && (x1 < xCenter || y1 < yCenter)) || ((xOrigin > 3000 || yOrigin > 2988) && (x1 > xCenter || y1 > yCenter)))
       // var checkCenter = ((xCenter + 25 > x1) && (xCenter - 25 < x1)) && ((yCenter - 25 < y1) && (yCenter + 25 > y1))
       vm.myAvatar.active = setInterval(function () {
-        x1 = vm.mouseX
-        y1 = vm.mouseY
-        dx = Math.abs(x1 - xCenter)
-        dy = Math.abs(y1 - yCenter)
-        checkX = (xCenter < x1) ? 1 : -1
-        checkY = (yCenter < y1) ? 1 : -1
-        err = dx - dy
+        if (i === 10) {
+          x1 = vm.mouseX
+          y1 = vm.mouseY
+          dx = Math.abs(x1 - xCenter)
+          dy = Math.abs(y1 - yCenter)
+          checkX = (xCenter < x1) ? 1.5 : -1.5
+          checkY = (yCenter < y1) ? 1.5 : -1.5
+          err = dx - dy
+          i = 0
+        }
+        i++
         if (vm.myAvatar.active) {
           firebase.database().ref('avatars/' + vm.myAvatar.id).update({
             y: yOrigin,
