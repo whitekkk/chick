@@ -11,7 +11,7 @@
     <div class="screen" @mouseover="move(time)" @mouseout="outOfArea">
       <img v-if="myAvatar.id === avatar.id" src="../static/img/gird-bg.png" :style="{'position':'absolute', 'top': -myAvatar.y+25+(winHeight/2)-50 + 'px', 'left': -myAvatar.x+25+(winWidth/2)-50 + 'px'}" v-for="avatar in avatars"/>
 
-      <div class="avatar" :style="{'top': avatar.y-myAvatar.y+(winHeight/2)-50 + 'px', 'left': avatar.x-myAvatar.x+(winWidth/2)-50 + 'px'}" v-for="avatar in avatars">
+      <div class="avatar" :style="{'top': avatar.y-myAvatar.y+(winHeight/2)-25 + 'px', 'left': avatar.x-myAvatar.x+(winWidth/2)-25 + 'px'}" v-for="avatar in avatars">
         <div>
           <!-- <img src="../static/img/king.png" width="65" height="65" style="position: absolute; z-index: 999; top:5px; left:-1px;"/>
           -->
