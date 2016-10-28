@@ -209,39 +209,38 @@ export default {
           i = 0
         }
         i++
-        if (vm.myAvatar.active) {
-          firebase.database().ref('avatars/' + vm.myAvatar.id).update({
-            y: yOrigin,
-            x: xOrigin
-          })
-        }
-        var e2 = 2 * err
+        if (!(((xCenter + 25 > x1) && (xCenter - 25 < x1)) && ((yCenter - 25 < y1) && (yCenter + 25 > y1)))) {
+          if (vm.myAvatar.active) {
+            firebase.database().ref('avatars/' + vm.myAvatar.id).update({
+              y: yOrigin,
+              x: xOrigin
+            })
+          }
+          var e2 = 2 * err
 
-        if (e2 > -dy) {
-          err -= dy
-          xOrigin += checkX
+          if (e2 > -dy) {
+            err -= dy
+            xOrigin += checkX
+          }
+          if (e2 < dx) {
+            err += dx
+            yOrigin += checkY
+          }
+          // check out of area
+          if (yOrigin < 0 && y1 < yCenter) {
+            yOrigin = 0
+          }
+          if (xOrigin < 25 && x1 < xCenter) {
+            xOrigin = 25
+          }
+          if (yOrigin > 2913 && y1 > yCenter) {
+            yOrigin = 2913
+          }
+          if (xOrigin > 2975 && x1 > xCenter) {
+            xOrigin = 2975
+          }
+          vm.actionLeg()
         }
-        if (e2 < dx) {
-          err += dx
-          yOrigin += checkY
-        }
-        // check out of area
-        if (yOrigin < 0 && y1 < yCenter) {
-          yOrigin = 0
-        }
-        if (xOrigin < 25 && x1 < xCenter) {
-          xOrigin = 25
-        }
-        if (yOrigin > 2913 && y1 > yCenter) {
-          yOrigin = 2913
-        }
-        if (xOrigin > 2975 && x1 > xCenter) {
-          xOrigin = 2975
-        }
-        if (((xCenter + 25 > x1) && (xCenter - 25 < x1)) && ((yCenter - 25 < y1) && (yCenter + 25 > y1))) {
-          clearInterval(vm.myAvatar.active)
-        }
-        vm.actionLeg()
       }, time)
     },
     outOfArea () {
